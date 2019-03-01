@@ -42,7 +42,7 @@ class MoveGen:
         if piece == 0:    # pawn
             return self.genPawnMoves(pos)
         elif piece == 1:  # knight
-            pass
+            return self.genKnightMoves(pos)
         elif piece == 2:  # bishop
             pass
         elif piece == 3:  # rook
@@ -53,7 +53,18 @@ class MoveGen:
             pass
         return []
 
-    # row: int(pos/8), col: pos % 8
+    def genKnightMoves(self, pos):
+        val = self.board.boardArr[pos]
+        if val % 10 != 1:
+            return []
+        color = 20 if val >= 20 else 10
+        moves = []
+        row, col = int(pos/8), pos % 8
+        for i, j in [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]:
+            if 0 <= row+i <= 7 and 0 <= col+j <= 7:
+                if self.board[(row+i, col+j)] == 0 or not (0 <= self.board[(row+i, col+j)] - color <= 5):
+                    moves.append((pos, 8*(row+i) + col+j))
+        return moves
 
     def genPawnMoves(self, pos):
         val = self.board.boardArr[pos]

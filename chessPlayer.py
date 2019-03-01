@@ -33,7 +33,7 @@ init = '- - - - - - - - \
         - - - - - - - - \
         - - - - - - - - '
 
-game = ChessGame(10, init=init)
+game = ChessGame(10)
 print(game)
 # print(game.board)
 moves = game.moveGen.getAllPlayerMoves()
