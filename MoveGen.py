@@ -41,19 +41,59 @@ class MoveGen:
         elif piece == 2:  # bishop
             return self.genBishopMoves(pos)
         elif piece == 3:  # rook
-            pass
+            return self.genRookMoves(pos)
         elif piece == 4:  # queen
             pass
         elif piece == 5:  # king
             pass
         return []
 
+    def genRookMoves(self, pos):
+        val = self.board.boardArr[pos]
+        if val % 10 != 3: return []
+        color = 20 if val >= 20 else 10
+        col = pos % 8
+        moves = []
+
+        # Up
+        onPos = pos + 8
+        while onPos // 8 < 8 and self.board.boardArr[onPos] == 0:
+            moves.append((pos, onPos))
+            onPos += 8
+        if onPos // 8 < 8 and not (0 <= self.board.boardArr[onPos] - color <= 5):
+            moves.append((pos, onPos))
+
+        # Down
+        onPos = pos - 8
+        while onPos // 8 >= 0 and self.board.boardArr[onPos] == 0:
+            moves.append((pos, onPos))
+            onPos -= 8
+        if onPos // 8 >= 0 and not (0 <= self.board.boardArr[onPos] - color <= 5):
+            moves.append((pos, onPos))
+
+        # Right
+        onPos = pos + 1
+        while col < onPos % 8 < 8 and self.board.boardArr[onPos] == 0:
+            moves.append((pos, onPos))
+            onPos += 1
+        if col < onPos % 8 < 8 and not (0 <= self.board.boardArr[onPos] - color <= 5):
+            moves.append((pos, onPos))
+
+        # Left
+        onPos = pos - 1
+        while (0 <= onPos % 8 < col) and self.board.boardArr[onPos] == 0:
+            moves.append((pos, onPos))
+            onPos -= 1
+        if 0 <= onPos % 8 < col and not (0 <= self.board.boardArr[onPos] - color <= 5):
+            moves.append((pos, onPos))
+
+        return moves
+
     def genBishopMoves(self, pos):
         val = self.board.boardArr[pos]
-        if val % 10 != 2:
-            return []
+        if val % 10 != 2: return []
         color = 20 if val >= 20 else 10
-        row, col = pos // 8, pos % 8
+        col = pos % 8
         moves = []
 
         # Up Right
@@ -61,7 +101,6 @@ class MoveGen:
         while onPos // 8 < 8 and col < onPos % 8 < 8 and self.board.boardArr[onPos] == 0:
             moves.append((pos, onPos))
             onPos += 9
-            print(onPos)
         if onPos // 8 < 8 and col < onPos % 8 < 8 and not (0 <= self.board.boardArr[onPos] - color <= 5):
             moves.append((pos, onPos))
 
@@ -93,8 +132,7 @@ class MoveGen:
 
     def genKnightMoves(self, pos):
         val = self.board.boardArr[pos]
-        if val % 10 != 1:
-            return []
+        if val % 10 != 1: return []
         color = 20 if val >= 20 else 10
         row, col = pos // 8, pos % 8
         moves = []
@@ -107,8 +145,7 @@ class MoveGen:
 
     def genPawnMoves(self, pos):
         val = self.board.boardArr[pos]
-        if val % 10 != 0:
-            return []
+        if val % 10 != 0: return []
         color = 20 if val >= 20 else 10
         upDown = -1 if color == 20 else +1
         moves = []
