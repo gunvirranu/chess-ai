@@ -33,8 +33,12 @@ init = '- - - - - - - - \
         - - - - - - - - \
         - - - - - - - - '
 
-game = ChessGame(10)
-print(game)
-# print(game.board)
+game = ChessGame(10, init)
+
 moves = game.moveGen.getAllPlayerMoves()
+for i in moves:
+    game.board.boardArr[i[1]] = 21
+
+print(game)
+
 print(moves)
