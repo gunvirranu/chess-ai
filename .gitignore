@@ -1,3 +1,5 @@
 .idea/
+__pycache__/
+*.py[cod]
 .python-version
 .DS_Store
