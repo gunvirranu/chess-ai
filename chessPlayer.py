@@ -14,8 +14,11 @@ class ChessGame:
         self.moveGen = MoveGen(self.board, self.player)
         self.moveEval = MoveEval(self.moveGen, self.player)
 
-    def goodMove(self):
-        return self.moveEval.goodMove()
+    def getMove(self, moveType=None):
+        if not moveType:
+            return self.moveEval.getMove()
+        else:
+            return self.moveEval.getMove(moveType=moveType)
 
     def __str__(self):
         out = '\n'
@@ -29,18 +32,19 @@ class ChessGame:
         return out
 
 
-init = '- - - r - - - - \
-        - - - - - b - - \
+init = '- - - - - - - - \
         - - - - - - - - \
-        - - - - - - - r \
-        - - - K - - - - \
-        r - - - - - - - \
         - - - - - - - - \
-        - - - - r - - - '
+        - - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - '
 
-game = ChessGame(10, init)
+game = ChessGame(20)
 print(game)
-move = game.goodMove()
+print(game.moveGen.getPlayerLegalMoves())
+move = game.getMove()
 print(move)
 
 
@@ -50,20 +54,20 @@ def versus():
     i = 0
     while True:
         print(game1)
-        move1 = game1.moveEval.goodMove()
+        move1 = game1.getMove()
         if not move1:
             break
         game1.board.makeMoveForce(move1)
         game2.board.makeMoveForce(move1)
         print(game1)
-        move2 = game2.moveEval.goodMove()
+        move2 = game2.getMove()
         if not move2:
             break
         game2.board.makeMoveForce(move2)
         game1.board.makeMoveForce(move2)
         i += 1
     print('Ran out of moves')
-    print(i)
+    print('Iterations:', i)
 
 
 def playHuman():
@@ -80,10 +84,10 @@ def playHuman():
                     move = (pos1, pos2)
                     if move in game.moveGen.getPiecePseudoLegalMoves(pos1):
                         break
-            except Exception:
+            except:
                 pass
         game.board.makeMoveForce(move)
         print(game)
-        move = game.moveEval.goodMove()
+        move = game.getMove()
         print(move)
         game.board.makeMoveForce(move)

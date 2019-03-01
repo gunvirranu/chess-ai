@@ -18,7 +18,7 @@ class Board:
               'P': 10, 'N': 11, 'B': 12, 'R': 13, 'Q': 14, 'K': 15,
               'p': 20, 'n': 21, 'b': 22, 'r': 23, 'q': 24, 'k': 25}
 
-    PIECES = {-1: '·', -2: ' ',  # black, white □
+    PIECES = {-1: '·', -2: ' ',  # black, white ·•
               10: '♙', 11: '♘', 12: '♗', 13: '♖', 14: '♕', 15: '♔',  # white
               20: '♟', 21: '♞', 22: '♝', 23: '♜', 24: '♛', 25: '♚'}  # black
 
@@ -64,9 +64,6 @@ class Board:
         for i in range(7, -1, -1):
             out += ' '.join([str(let) if let != 0 else '00' for let in self.boardArr[8*i:8*i+8]]) + '\n'
         return out
-
-    def __iter__(self):
-        return iter(self.boardArr)
 
     def __getitem__(self, item):  # (row, col)
         return self.boardArr[8*item[0] + item[1]]

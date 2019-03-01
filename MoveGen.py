@@ -6,17 +6,22 @@ class MoveGen:
         self.board = board
         self.player = player
 
-    def getAllPlayerMoves(self):
-        moves = []
-        for ind, val in enumerate(self.board):
+    def getPlayerLegalMoves(self, legal=True):
+        pseudoMoves = []
+        for ind, val in enumerate(self.board.boardArr):
             if val == 0:
                 continue
             color = 20 if val >= 20 else 10
             if color == self.player:
-                moves += self.getPiecePseudoLegalMoves(ind)
-        return moves
+                pseudoMoves += self.getPiecePseudoLegalMoves(ind)
+        if legal:  # TODO: Create legal checker
+            legalMoves = []
+            for move in pseudoMoves:
+                pass
+            return legalMoves
+        else:
+            return pseudoMoves
 
-    # TODO: Check for legalities such as putting king in check
     def getPiecePseudoLegalMoves(self, pos):
         boardVal = self.board.boardArr[pos]
         if boardVal == 0:
@@ -49,7 +54,7 @@ class MoveGen:
             return None
         # TODO: sketchy king check check
         oppMoveGen = MoveGen(self.board, 20 if self.player == 10 else 10)
-        kingHits = [move[0] for move in oppMoveGen.getAllPlayerMoves() if move[1] == pos]
+        kingHits = [move[0] for move in oppMoveGen.getPlayerLegalMoves() if move[1] == pos]
         if kingHits:
             return kingHits
         return None
@@ -199,13 +204,13 @@ class MoveGen:
 
         # Capture diagonally
         nineMove = pos + 9*upDown
-        if ((0 <= nineMove < 64) and color == 10 and nineMove % 8 != 7) or (color == 20 and nineMove % 8 != 0):
+        if (0 <= nineMove < 64) and ((color == 10 and pos % 8 != 7) or (color == 20 and pos % 8 != 0)):
             if self.board.boardArr[nineMove] != 0 and not (0 <= self.board.boardArr[nineMove] - color <= 5):
                 moves.append((pos, nineMove))
 
         # Capture other diagonal
         sevenMove = pos + 7*upDown
-        if ((0 <= nineMove < 64) and color == 10 and sevenMove % 8 != 0) or (color == 20 and sevenMove % 8 != 7):
+        if (0 <= nineMove < 64) and ((color == 10 and pos % 8 != 0) or (color == 20 and pos % 8 != 7)):
             if self.board.boardArr[sevenMove] != 0 and not (0 <= self.board.boardArr[sevenMove] - color <= 5):
                 moves.append((pos, sevenMove))
 

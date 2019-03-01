@@ -11,22 +11,25 @@ class MoveEval:
     def boardHeuristic(self):
         return 1
 
-    def goodMove(self):
+    def getMove(self, moveType='random'):
 
         # If in check, respond
         kingHits = self.moveGen.isKingInCheck()
         if kingHits:
-            print('IN CHECK')
             return self.kingCheckResponse()
 
-        # TODO: Choose better move
-        moves = self.moveGen.getAllPlayerMoves()
+        moves = self.moveGen.getPlayerLegalMoves()
         if len(moves) == 0:
             return None
-        return choice(moves)
+
+        # TODO: Choose better move
+        if moveType == 'random':
+            return choice(moves)
+        else:
+            raise ValueError("Enter valid move choose type")
 
     def kingCheckResponse(self):
-        allMoves = self.moveGen.getAllPlayerMoves()
+        allMoves = self.moveGen.getPlayerLegalMoves()
         responseMoves = []
         for move in allMoves:
             self.board.makeMoveForce(move)
