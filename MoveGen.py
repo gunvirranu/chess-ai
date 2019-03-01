@@ -26,10 +26,11 @@ class MoveGen:
                 continue
             color = 20 if val >= 20 else 10
             if color == self.player:
-                moves += self.getPieceLegalMoves(ind)
+                moves += self.getPiecePseudoLegalMoves(ind)
         return moves
 
-    def getPieceLegalMoves(self, pos):
+    # TODO: Check for legalities such as putting king in check
+    def getPiecePseudoLegalMoves(self, pos):
         boardVal = self.board.boardArr[pos]
         if boardVal == 0:
             return []
@@ -45,8 +46,22 @@ class MoveGen:
         elif piece == 4:  # queen
             return self.genQueenMoves(pos)
         elif piece == 5:  # king
-            pass
-        return []
+            return self.genKingMoves(pos)
+        else:
+            return []
+
+    def genKingMoves(self, pos):
+        val = self.board.boardArr[pos]
+        if val % 10 != 5: return []
+        color = 20 if val >= 20 else 10
+        moves = []
+
+        for i in (-9, -8, -7, -1, 1, 7, 8, 9):
+                if 0 <= (pos+i) // 8 < 8 and 0 <= (pos+i) % 8 < 8:
+                    if self.board.boardArr[pos+i] == 0 or not (0 <= self.board.boardArr[pos+i] - color <= 5):
+                        moves.append((pos, pos+i))
+        return moves
+
 
     def genQueenMoves(self, pos):
         val = self.board.boardArr[pos]
