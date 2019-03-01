@@ -43,10 +43,27 @@ class MoveGen:
         elif piece == 3:  # rook
             return self.genRookMoves(pos)
         elif piece == 4:  # queen
-            pass
+            return self.genQueenMoves(pos)
         elif piece == 5:  # king
             pass
         return []
+
+    def genQueenMoves(self, pos):
+        val = self.board.boardArr[pos]
+        if val % 10 != 4: return []
+        color = 20 if val >= 20 else 10
+        moves = []
+
+        # Bishop substitution
+        self.board.boardArr[pos] = color + 2
+        moves += self.genBishopMoves(pos)
+
+        # Rook substitution
+        self.board.boardArr[pos] = color + 3
+        moves += self.genRookMoves(pos)
+
+        self.board.boardArr[pos] = val
+        return moves
 
     def genRookMoves(self, pos):
         val = self.board.boardArr[pos]
