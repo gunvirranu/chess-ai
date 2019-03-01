@@ -37,12 +37,30 @@ class MoveGen:
         else:
             return []
 
+    def isKingInCheck(self):
+        pos = None
+        for ind in range(64):
+            if self.board.boardArr[ind] == 0:
+                continue
+            if self.board.boardArr[ind] == self.player + 5:  # King found
+                pos = ind
+                break
+        if not pos:
+            return None
+        # TODO: sketchy king check check
+        oppMoveGen = MoveGen(self.board, 20 if self.player == 10 else 10)
+        kingHits = [move[0] for move in oppMoveGen.getAllPlayerMoves() if move[1] == pos]
+        if kingHits:
+            return kingHits
+        return None
+
     def genKingMoves(self, pos):
         val = self.board.boardArr[pos]
         if val % 10 != 5: return []
         color = 20 if val >= 20 else 10
         moves = []
 
+        # Iterate through every possible direction
         for i in (-9, -8, -7, -1, 1, 7, 8, 9):
                 if 0 <= (pos+i) // 8 < 8 and 0 <= (pos+i) % 8 < 8:
                     if self.board.boardArr[pos+i] == 0 or not (0 <= self.board.boardArr[pos+i] - color <= 5):
@@ -156,6 +174,7 @@ class MoveGen:
         row, col = pos // 8, pos % 8
         moves = []
 
+        # Iterate through all possible knight moves
         for i, j in [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]:
             if 0 <= row+i < 8 and 0 <= col+j < 8:
                 if self.board[(row+i, col+j)] == 0 or not (0 <= self.board[(row+i, col+j)] - color <= 5):
@@ -174,7 +193,7 @@ class MoveGen:
             pass
         elif color == 20 and pos < 16:
             pass
-        # Straight capture
+        # Move forward
         elif self.board.boardArr[pos + 8*upDown] == 0:
             moves.append((pos, pos + 8*upDown))
 

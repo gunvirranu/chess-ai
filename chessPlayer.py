@@ -14,6 +14,9 @@ class ChessGame:
         self.moveGen = MoveGen(self.board, self.player)
         self.moveEval = MoveEval(self.moveGen, self.player)
 
+    def goodMove(self):
+        return self.moveEval.goodMove()
+
     def __str__(self):
         out = '\n'
         out += 'Gunvir\'s Sick-Ass Chess Game LMAO\n'
@@ -26,14 +29,19 @@ class ChessGame:
         return out
 
 
-init = '- - - - - - - - \
+init = '- - - r - - - - \
+        - - - - - b - - \
         - - - - - - - - \
+        - - - - - - - r \
+        - - - K - - - - \
+        r - - - - - - - \
         - - - - - - - - \
-        - - - - - - - - \
-        - - - - - - - - \
-        - - - - - - - - \
-        - - - - - - - - \
-        - - - - - - - - '
+        - - - - r - - - '
+
+game = ChessGame(10, init)
+print(game)
+move = game.goodMove()
+print(move)
 
 
 def versus():
@@ -56,9 +64,6 @@ def versus():
         i += 1
     print('Ran out of moves')
     print(i)
-
-
-versus()
 
 
 def playHuman():
