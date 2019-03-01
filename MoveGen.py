@@ -2,8 +2,8 @@
 """
   Move Object:
   
-  (type_of_move, start_pos, end_pos)
-  type_of_move:
+  (start_pos, end_pos, end_pos_piece, move_type)
+  move_type:
     1: unknown
     2: safe
     3: capture
@@ -36,7 +36,7 @@ class MoveGen:
                 continue
             color = 20 if val >= 20 else 10
             if color == self.player:
-                moves += (self.getPieceLegalMoves(ind))
+                moves += self.getPieceLegalMoves(ind)
         return moves
 
     def getPieceLegalMoves(self, pos):
@@ -44,9 +44,9 @@ class MoveGen:
         if boardVal == 0:
             return []
         piece = boardVal % 10
-        color = 20 if boardVal >= 20 else 10
+        # color = 20 if boardVal >= 20 else 10
         if piece == 0:    # pawn
-            pass
+            return self.genPawnMoves(pos)
         elif piece == 1:  # knight
             pass
         elif piece == 2:  # bishop
@@ -57,4 +57,7 @@ class MoveGen:
             pass
         elif piece == 5:  # king
             pass
+        return []
+
+    def genPawnMoves(self, pos):
         return []

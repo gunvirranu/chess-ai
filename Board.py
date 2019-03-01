@@ -31,6 +31,18 @@ class Board:
             self.boardArr = Board.convertLetterToBoard(init)
         else:
             self.boardArr = init
+        self.moveHistory = []
+
+    def makeMoveForce(self, move):
+        self.boardArr[move[1]] = self.boardArr[move[0]]
+        self.boardArr[move[0]] = 0
+        self.moveHistory.append(move)
+
+    def undoMove(self):
+        lastMove = self.moveHistory.pop()
+        self.boardArr[lastMove[0]] = self.boardArr[lastMove[1]]
+        self.boardArr[lastMove[1]] = lastMove[2]
+        return lastMove
 
     def getPrettyBoard(self):
         out = []
