@@ -34,6 +34,7 @@ class Board:
         self.moveHistory = []
 
     def makeMoveForce(self, move):
+        move += (self.boardArr[move[1]],)
         self.boardArr[move[1]] = self.boardArr[move[0]]
         self.boardArr[move[0]] = 0
         self.moveHistory.append(move)
@@ -41,8 +42,8 @@ class Board:
     def undoMove(self):
         lastMove = self.moveHistory.pop()
         self.boardArr[lastMove[0]] = self.boardArr[lastMove[1]]
-        self.boardArr[lastMove[1]] = lastMove[2]
-        return lastMove
+        self.boardArr[lastMove[1]] = lastMove[-1]
+        return lastMove[0:-1]
 
     def getPrettyBoard(self):
         out = []

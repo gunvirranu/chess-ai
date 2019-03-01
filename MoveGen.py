@@ -1,13 +1,8 @@
+from Board import Board
 
 """
-  Move Object:
-  
-  (start_pos, end_pos, end_pos_piece, move_type)
-  move_type:
-    1: unknown
-    2: safe
-    3: capture
-    4: check
+  Move Object:  
+  (start_pos, end_pos)
 """
 
 """
@@ -44,7 +39,6 @@ class MoveGen:
         if boardVal == 0:
             return []
         piece = boardVal % 10
-        # color = 20 if boardVal >= 20 else 10
         if piece == 0:    # pawn
             return self.genPawnMoves(pos)
         elif piece == 1:  # knight
@@ -59,5 +53,29 @@ class MoveGen:
             pass
         return []
 
+    # row: int(pos/8), col: pos % 8
+
     def genPawnMoves(self, pos):
-        return []
+        val = self.board.boardArr[pos]
+        if val % 10 != 0:
+            return []
+        color = 20 if val >= 20 else 10
+        upDown = -1 if color == 20 else +1
+        moves = []
+        # TODO: Handle pawn promotion
+        if color == 10 and pos >= 48:
+            pass
+        elif color == 20 and pos < 16:
+            pass
+        elif self.board.boardArr[pos + 8*upDown] == 0:
+            moves.append((pos, pos + 8*upDown))
+        # Capture diagonally
+        nineMove = pos + 9*upDown
+        if (color == 10 and pos % 8 != 7) or (color == 20 and pos % 8 != 0):
+            if self.board.boardArr[nineMove] != 0 and not (0 <= self.board.boardArr[nineMove] - color <= 5):
+                moves.append((pos, nineMove))
+        sevenMove = pos + 7*upDown
+        if (color == 10 and pos % 8 != 0) or (color == 20 and pos % 8 != 7):
+            if self.board.boardArr[sevenMove] != 0 and not (0 <= self.board.boardArr[sevenMove] - color <= 5):
+                moves.append((pos, sevenMove))
+        return moves

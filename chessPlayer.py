@@ -18,13 +18,23 @@ class ChessGame:
         out += 'Player: ' + 'White\n' if self.player == 10 else 'Black\n'
         out += '  ╔═════════════════╗\n'
         for i, line in enumerate(self.board.getPrettyBoard()):
-            out += str(8-i) + ' ║ ' + line + ' ║\n'
+            out += str(7-i) + ' ║ ' + line + ' ║\n'
         out += '  ╚═════════════════╝\n'
-        out += '    a b c d e f g h \n'
+        out += '    0 1 2 3 4 5 6 7 \n'
         return out
 
 
-game = ChessGame(10)
+init = '- - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - \
+        - - - - - - - - '
+
+game = ChessGame(10, init=init)
 print(game)
-print(game.board)
-print(game.moveGen.getAllPlayerMoves())
+# print(game.board)
+moves = game.moveGen.getAllPlayerMoves()
+print(moves)
