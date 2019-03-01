@@ -1,16 +1,3 @@
-from Board import Board
-
-"""
-  White: Offset = 10
-  Black: Offset = 20
-  
-  Pawn:    +0
-  Knight:  +1
-  Bishop:  +2
-  Rook:    +3
-  Queen:   +4
-  King:    +5
-"""
 
 
 class MoveGen:
@@ -60,8 +47,8 @@ class MoveGen:
                 if 0 <= (pos+i) // 8 < 8 and 0 <= (pos+i) % 8 < 8:
                     if self.board.boardArr[pos+i] == 0 or not (0 <= self.board.boardArr[pos+i] - color <= 5):
                         moves.append((pos, pos+i))
-        return moves
 
+        return moves
 
     def genQueenMoves(self, pos):
         val = self.board.boardArr[pos]
@@ -193,13 +180,13 @@ class MoveGen:
 
         # Capture diagonally
         nineMove = pos + 9*upDown
-        if (color == 10 and pos % 8 != 7) or (color == 20 and pos % 8 != 0):
+        if ((0 <= nineMove < 64) and color == 10 and nineMove % 8 != 7) or (color == 20 and nineMove % 8 != 0):
             if self.board.boardArr[nineMove] != 0 and not (0 <= self.board.boardArr[nineMove] - color <= 5):
                 moves.append((pos, nineMove))
-        sevenMove = pos + 7*upDown
 
         # Capture other diagonal
-        if (color == 10 and pos % 8 != 0) or (color == 20 and pos % 8 != 7):
+        sevenMove = pos + 7*upDown
+        if ((0 <= nineMove < 64) and color == 10 and sevenMove % 8 != 0) or (color == 20 and sevenMove % 8 != 7):
             if self.board.boardArr[sevenMove] != 0 and not (0 <= self.board.boardArr[sevenMove] - color <= 5):
                 moves.append((pos, sevenMove))
 
