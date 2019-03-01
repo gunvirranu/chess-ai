@@ -1,4 +1,5 @@
 from Board import Board
+from MoveGen import MoveGen
 
 
 class ChessGame:
@@ -9,17 +10,21 @@ class ChessGame:
         else:
             self.player = player
         self.board = Board(init)
+        self.moveGen = MoveGen(self.board, self.player)
 
-    def printGame(self):
-        print()
-        print('Gunvir\'s Sick-Ass Chess Game LMAO')
-        print('Player:', 'White' if self.player == 10 else 'Black')
-        print('  ╔═════════════════╗')
+    def __str__(self):
+        out = '\n'
+        out += 'Gunvir\'s Sick-Ass Chess Game LMAO\n'
+        out += 'Player: ' + 'White\n' if self.player == 10 else 'Black\n'
+        out += '  ╔═════════════════╗\n'
         for i, line in enumerate(self.board.getPrettyBoard()):
-            print(i, '║', line, '║')
-        print('  ╚═════════════════╝')
-        print('    a b c d e f g h ')
+            out += str(8-i) + ' ║ ' + line + ' ║\n'
+        out += '  ╚═════════════════╝\n'
+        out += '    a b c d e f g h \n'
+        return out
 
 
 game = ChessGame(10)
-game.printGame()
+print(game)
+print(game.board)
+print(game.moveGen.getAllPlayerMoves())

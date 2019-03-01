@@ -6,8 +6,6 @@ class Board:
     White: Offset = 10
     Black: Offset = 20
 
-    Piece:  Value
-    -------------
     Pawn:    +0
     Knight:  +1
     Bishop:  +2
@@ -37,11 +35,11 @@ class Board:
     def getPrettyBoard(self):
         out = []
         for i in range(7, -1, -1):
-            line = []
+            line = [''] * 8
             for ind, val in enumerate(self.boardArr[8*i:8*i+8]):
                 if val == 0:
                     val = -1 if ind % 2 == i % 2 else -2    # -1: black, -2: white
-                line.append(Board.PIECES[val])
+                line[ind] = Board.PIECES[val]
             out.append(' '.join(line))
         return out
 
@@ -51,8 +49,17 @@ class Board:
     def __str__(self):
         out = ''
         for i in range(7, -1, -1):
-            out += ', '.join([str(let) if let != 0 else '00' for let in self.boardArr[8*i:8*i+8]]) + '\n'
+            out += ' '.join([str(let) if let != 0 else '00' for let in self.boardArr[8*i:8*i+8]]) + '\n'
         return out
+
+    def __iter__(self):
+        return iter(self.boardArr)
+
+    def __getitem__(self, item):  # (row, col)
+        return self.boardArr[8*item[0] + item[1]]
+
+    def __setitem__(self, key, value):
+        self.boardArr[8*key[0] + key[1]] = Board.LETTER[value]
 
     @staticmethod
     def convertLetterToBoard(letterBoard):
