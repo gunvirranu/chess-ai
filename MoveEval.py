@@ -3,20 +3,51 @@ from random import choice
 
 class MoveEval:
 
+    """
+     Pawn:    +0
+     Knight:  +1
+     Bishop:  +2
+     Rook:    +3
+     Queen:   +4
+     King:    +5
+    """
+
+    PIECE_VALUE = [1, 3, 3, 5, 9, 42069]  # lmao
+
     def __init__(self, moveGen, player):
         self.player = player
         self.moveGen = moveGen
         self.board = self.moveGen.board
 
     def boardHeuristic(self):
-        return 1
+        boardVal = 0
+        for ind, val in enumerate(self.board.boardArr):
+            if val == 0:
+                continue
+            boardVal += MoveEval.PIECE_VALUE[val % 10] * (+1 if 0 <= val - self.player <= 5 else -1)
+        return boardVal
 
-    def getMove(self, moveType='random'):
+    def minimax(self, moves):
+        return None
 
+    def oneLook(self, moves):
+        moveVal = [0] * len(moves)
+        for i in range(len(moves)):
+            self.board.makeMoveForce(moves[i])
+            # TODO: Can cache board heuristic as the only values changed are the ones moved
+            moveVal[i] = self.boardHeuristic()
+            self.board.undoMove()
+        return moves[moveVal.index(max(moveVal))]
+
+    def randomMove(self, moves):
+        # TODO: Random move does NOT take a win if possible
         # If King in check, respond
         kingHits = self.moveGen.isKingInCheck()
         if kingHits:
             return self.kingCheckResponse()
+        return choice(moves)
+
+    def getMove(self, moveType='oneLook'):
 
         moves = self.moveGen.getPlayerLegalMoves()
         if len(moves) == 0:
@@ -24,7 +55,11 @@ class MoveEval:
 
         # TODO: Choose better move
         if moveType == 'random':
-            return choice(moves)
+            return self.randomMove(moves)
+        elif moveType == 'oneLook':
+            return self.oneLook(moves)
+        elif moveType == 'minimax':
+            return self.minimax(moves)
         else:
             raise ValueError("Enter valid move choose type")
 
