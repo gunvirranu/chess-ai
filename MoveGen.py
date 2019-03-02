@@ -7,6 +7,7 @@ class MoveGen:
         self.player = player
 
     def getPlayerLegalMoves(self, legal=True):
+
         pseudoMoves = []
         for ind, val in enumerate(self.board.boardArr):
             if val == 0:
@@ -14,13 +15,16 @@ class MoveGen:
             color = 20 if val >= 20 else 10
             if color == self.player:
                 pseudoMoves += self.getPiecePseudoLegalMoves(ind)
-        if legal:  # TODO: Create legal checker
-            legalMoves = []
-            for move in pseudoMoves:
-                pass
-            return legalMoves
-        else:
-            return pseudoMoves
+
+        if not legal: return pseudoMoves
+        legalMoves = []
+        kingPos = self.getKingPos()
+        for move in pseudoMoves:
+            self.board.makeMoveForce(move)
+            if not self.isKingInCheck(move[1] if move[0] == kingPos else kingPos):
+                legalMoves.append(move)
+            self.board.undoMove()
+        return legalMoves
 
     def getPiecePseudoLegalMoves(self, pos):
         boardVal = self.board.boardArr[pos]
@@ -42,21 +46,24 @@ class MoveGen:
         else:
             return []
 
-    def isKingInCheck(self):
-        pos = None
+    def isKingInCheck(self, pos=None):
+        if not pos:
+            pos = self.getKingPos()
+            if not pos:
+                return None
+        # Pretty inefficient check for if king is in check
+        oppMoveGen = MoveGen(self.board, 20 if self.player == 10 else 10)
+        kingHits = [move for move in oppMoveGen.getPlayerLegalMoves(legal=False) if move[1] == pos]
+        if kingHits:
+            return kingHits
+        return None
+
+    def getKingPos(self):
         for ind in range(64):
             if self.board.boardArr[ind] == 0:
                 continue
             if self.board.boardArr[ind] == self.player + 5:  # King found
-                pos = ind
-                break
-        if not pos:
-            return None
-        # TODO: sketchy king check check
-        oppMoveGen = MoveGen(self.board, 20 if self.player == 10 else 10)
-        kingHits = [move[0] for move in oppMoveGen.getPlayerLegalMoves() if move[1] == pos]
-        if kingHits:
-            return kingHits
+                return ind
         return None
 
     def genKingMoves(self, pos):

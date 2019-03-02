@@ -13,7 +13,7 @@ class MoveEval:
 
     def getMove(self, moveType='random'):
 
-        # If in check, respond
+        # If King in check, respond
         kingHits = self.moveGen.isKingInCheck()
         if kingHits:
             return self.kingCheckResponse()
@@ -29,12 +29,13 @@ class MoveEval:
             raise ValueError("Enter valid move choose type")
 
     def kingCheckResponse(self):
+        kingPos = self.moveGen.getKingPos()
+        if not kingPos: return None
         allMoves = self.moveGen.getPlayerLegalMoves()
         responseMoves = []
         for move in allMoves:
             self.board.makeMoveForce(move)
-            newKingHits = self.moveGen.isKingInCheck()
-            if not newKingHits:
+            if not self.moveGen.isKingInCheck(move[1] if move[0] == kingPos else kingPos):
                 responseMoves.append((move, self.boardHeuristic()))
             self.board.undoMove()
         if not responseMoves:
