@@ -15,8 +15,8 @@ class MoveGen:
             color = 20 if val >= 20 else 10
             if color == self.player:
                 pseudoMoves += self.getPiecePseudoLegalMoves(ind)
-
         if not legal: return pseudoMoves
+
         legalMoves = []
         kingPos = self.getKingPos()
         for move in pseudoMoves:
@@ -49,14 +49,12 @@ class MoveGen:
     def isKingInCheck(self, pos=None):
         if not pos:
             pos = self.getKingPos()
-            if not pos:
+            if pos is None:
                 return None
-        # Pretty inefficient check for if king is in check
+        # Makes every opponent move and sees if any can potentially hit king
         oppMoveGen = MoveGen(self.board, 20 if self.player == 10 else 10)
         kingHits = [move for move in oppMoveGen.getPlayerLegalMoves(legal=False) if move[1] == pos]
-        if kingHits:
-            return kingHits
-        return None
+        return kingHits
 
     def getKingPos(self):
         for ind in range(64):
@@ -70,14 +68,18 @@ class MoveGen:
         val = self.board.boardArr[pos]
         if val % 10 != 5: return []
         color = 20 if val >= 20 else 10
+        row = pos // 8
+        col = pos % 8
         moves = []
 
         # Iterate through every possible direction
-        for i in (-9, -8, -7, -1, 1, 7, 8, 9):
-                if 0 <= (pos+i) // 8 < 8 and 0 <= (pos+i) % 8 < 8:
-                    if self.board.boardArr[pos+i] == 0 or not (0 <= self.board.boardArr[pos+i] - color <= 5):
-                        moves.append((pos, pos+i))
-
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if not (0 <= row+i < 8) or not (0 <= col+j < 8) or (i == 0 and j == 0):
+                    continue
+                ijVal = self.board[(row+i, col+j)]
+                if ijVal == 0 or not (0 <= ijVal - color <= 5):
+                    moves.append((pos, 8*(row+i) + (col+j)))
         return moves
 
     def genQueenMoves(self, pos):
