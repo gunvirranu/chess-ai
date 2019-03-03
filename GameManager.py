@@ -35,20 +35,22 @@ class TwoPlayerChess:
 
 class AIvAIGame(TwoPlayerChess):
 
-    def __init__(self):
+    def __init__(self, whiteMoveType=None, blackMoveType=None):
         super().__init__()
+        self.whiteMoveType = whiteMoveType
+        self.blackMoveType = blackMoveType
         self.count = 0
 
     def playOneMove(self, printBoards=True):
 
-        move = self.white.getMove()
+        move = self.white.getMove(moveType=self.whiteMoveType)
         if not move:
             return False
         self.makeWhiteMove(move, checkLegal=False)
         if printBoards:
             print(self.white)
 
-        move = self.black.getMove()
+        move = self.black.getMove(moveType=self.blackMoveType)
         if not move:
             return False
         self.makeBlackMove(move, checkLegal=False)
@@ -67,21 +69,61 @@ class AIvAIGame(TwoPlayerChess):
         print('Played', n, 'rounds.')
         self.printGameStatus()
 
-    def playUntilDone(self, printBoards=True):
+    def playUntilDone(self, printStuff=True):
+        sameCount = 0
+        last = None
         while self.kingStatus() == 3:
-            stat = self.playOneMove(printBoards)
+            stat = self.playOneMove(printStuff)
             if not stat:
                 break
-        self.printGameStatus()
-        print('Rounds played: ', self.count)
+            # Cycle counter
+            new = self.white.moveEval.boardHeuristic()
+            if new == last:
+                sameCount += 1
+            else:
+                sameCount = 0
+            last = new
+            if sameCount >= 20:
+                if printStuff: print('Cycle detected!')
+                break
+        if printStuff:
+            self.printGameStatus()
+            print('Turns played: ', self.count)
+
+    def playNTimes(self, n):
+
+        winStats = [0, 0]
+        for i in range(n):
+            print('Currently playing:', i)
+            self.playUntilDone(printStuff=False)
+
+            stat = self.kingStatus()
+            if stat == 1:
+                winStats[0] += 1
+            elif stat == 2:
+                winStats[1] += 1
+            else:
+                if self.white.moveEval.boardHeuristic() > self.black.moveEval.boardHeuristic():
+                    winStats[0] += 1
+                else:
+                    winStats[1] += 1
+
+            self.white = ChessGame(10)
+            self.black = ChessGame(20, initBoard=self.white.board)
+
+        print('\nWin Count (%) :')
+        print('White:', winStats[0], ' (', winStats[0] / n, ')')
+        print('Black:', winStats[1], ' (', winStats[1] / n, ')')
+        return winStats
 
 
 class HumanvAIGame(TwoPlayerChess):
 
-    def __init__(self, human):
+    def __init__(self, human, aiMoveType=None):
         super().__init__()
         self.human = human
         self.ai = 10 if human == 20 else 20
+        self.aiMoveType = aiMoveType
         self.first = self.human if self.human == 10 else self.ai
 
     def getHumanMove(self):
@@ -99,7 +141,7 @@ class HumanvAIGame(TwoPlayerChess):
                 while not self.makeWhiteMove(self.getHumanMove(), checkLegal=True):
                     pass
             else:
-                move = self.white.getMove()
+                move = self.white.getMove(moveType=self.aiMoveType)
                 self.makeWhiteMove(move)
                 print('AI chose move:  ', move[0], '->', move[1])
 
@@ -108,7 +150,7 @@ class HumanvAIGame(TwoPlayerChess):
                 while not self.makeBlackMove(self.getHumanMove(), checkLegal=True):
                     pass
             else:
-                move = self.black.getMove()
+                move = self.black.getMove(moveType=self.aiMoveType)
                 self.makeBlackMove(move)
                 print('AI chose move:  ', move[0], '->', move[1])
 
