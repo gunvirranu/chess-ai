@@ -28,9 +28,17 @@ class MoveEval:
             boardVal += MoveEval.PIECE_VALUE[val % 10] * (+1 if 0 <= val - self.player <= 5 else -1)
         return boardVal
 
-    # TODO: Write smartBoardHeuristic which uses previous board heuristic and move to quickly calculate new value
     def smartBoardHeuristic(self, currentHeuristic, move):  # Must be BEFORE move is applied
-        pass
+        # movePiece = self.board.boardArr[move[0]]
+        landPiece = self.board.boardArr[move[1]]
+        # Remove value from piece about to be moved
+        # currentHeuristic -= MoveEval.PIECE_VALUE[movePiece % 10] * (+1 if 0 <= movePiece - self.player <= 5 else -1)
+        # Remove value from piece that gets landed on
+        if landPiece != 0:
+            currentHeuristic -= MoveEval.PIECE_VALUE[landPiece % 10] * (+1 if 0 <= landPiece - self.player <= 5 else -1)
+        # Add value from piece that gets moved to new spot
+        # currentHeuristic += MoveEval.PIECE_VALUE[movePiece % 10] * (+1 if 0 <= movePiece - self.player <= 5 else -1)
+        return currentHeuristic
 
     def getMove(self, maxDepth=None):
         return MinMax(self, maxDepth).getMove()

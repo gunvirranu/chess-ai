@@ -21,12 +21,13 @@ class MinMax:
     def getMove(self):
         if self.moveGen.isCheckmate():
             return None, None
-        return self.negamax(depth=0, alpha=-9999999, beta=+9999999, color=1)
+        currentHeuristic = self.moveEval.boardHeuristic()
+        return self.negamax(depth=0, alpha=-9999999, beta=+9999999, color=1, currentHeuristic=currentHeuristic)
 
-    def negamax(self, depth, alpha, beta, color):
+    def negamax(self, depth, alpha, beta, color, currentHeuristic):
 
         if depth == self.MAX_DEPTH:
-            return None, color * self.moveEval.boardHeuristic()
+            return None, color * currentHeuristic
 
         gen = self.moveGen if color == 1 else self.oppGen
         moves = gen.getPlayerMoves(legal=False)
@@ -40,16 +41,17 @@ class MinMax:
 
         for move in moves:
 
-            if self.board.boardArr[move[1]] % 10 == 5:
-                kingKillFlag = True
-            else:
-                kingKillFlag = False
+            newHeuristic = self.moveEval.smartBoardHeuristic(currentHeuristic, move)
 
-            self.board.makeMoveForce(move)
-            downMove, negaScore = self.negamax(depth + 1 if not kingKillFlag else self.MAX_DEPTH, -beta, -alpha, -color)
-            self.board.undoMove()
-            if negaScore is None:
-                continue
+            if self.board.boardArr[move[1]] % 10 == 5:
+                downMove, negaScore = None, -color * newHeuristic
+
+            else:
+                self.board.makeMoveForce(move)
+                downMove, negaScore = self.negamax(depth + 1, -beta, -alpha, -color, newHeuristic)
+                self.board.undoMove()
+                if negaScore is None:
+                    continue
 
             moveScores.append((move, -negaScore))
 
@@ -102,7 +104,6 @@ class MinMax:
             bestMove, bestScore = min(moveScores, key=lambda x: x[1])
 
         if depth == 0:
-            print(moveScores)
             print('# of moves evaluated:', self.movesEvaluated)
 
         return bestMove, bestScore
