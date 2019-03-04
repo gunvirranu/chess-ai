@@ -6,8 +6,7 @@ class MoveGen:
         self.board = board
         self.player = player
 
-    def getPlayerLegalMoves(self, legal=True):
-
+    def getPlayerMoves(self, legal=False):
         pseudoMoves = []
         for ind, val in enumerate(self.board.boardArr):
             if val == 0:
@@ -18,10 +17,9 @@ class MoveGen:
         if not legal: return pseudoMoves
 
         legalMoves = []
-        kingPos = self.getKingPos()
         for move in pseudoMoves:
             self.board.makeMoveForce(move)
-            if not self.isKingInCheck(move[1] if move[0] == kingPos else kingPos):
+            if not self.isKingInCheck():
                 legalMoves.append(move)
             self.board.undoMove()
         return legalMoves
@@ -46,15 +44,20 @@ class MoveGen:
         else:
             return []
 
-    def isKingInCheck(self, pos=None):
-        if not pos:
-            pos = self.getKingPos()
-            if pos is None:
-                return None
+    def isCheckmate(self):
+        legalMoves = self.getPlayerMoves(legal=True)
+        if legalMoves:
+            return False
+        return True
+
+    def isKingInCheck(self):
         # Makes every opponent move and sees if any can potentially hit king
         oppMoveGen = MoveGen(self.board, 20 if self.player == 10 else 10)
-        kingHits = [move for move in oppMoveGen.getPlayerLegalMoves(legal=False) if move[1] == pos]
-        return kingHits
+        kingHits = [move for move in oppMoveGen.getPlayerMoves(legal=False) if self.board.boardArr[move[1]] % 10 == 5]
+        if kingHits:
+            return kingHits
+        else:
+            return None
 
     def getKingPos(self):
         for ind in range(64):

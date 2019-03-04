@@ -35,22 +35,22 @@ class TwoPlayerChess:
 
 class AIvAIGame(TwoPlayerChess):
 
-    def __init__(self, whiteMoveType=None, blackMoveType=None):
+    def __init__(self, whiteMaxDepth=None, blackMaxDepth=None):
         super().__init__()
-        self.whiteMoveType = whiteMoveType
-        self.blackMoveType = blackMoveType
+        self.whiteMaxDepth = whiteMaxDepth
+        self.blackMaxDepth = blackMaxDepth
         self.count = 0
 
     def playOneMove(self, printBoards=True):
 
-        move = self.white.getMove(moveType=self.whiteMoveType)
+        move = self.white.getMove(maxDepth=self.whiteMaxDepth)[0]
         if not move:
             return False
         self.makeWhiteMove(move, checkLegal=False)
         if printBoards:
             print(self.white)
 
-        move = self.black.getMove(moveType=self.blackMoveType)
+        move = self.black.getMove(maxDepth=self.blackMaxDepth)[0]
         if not move:
             return False
         self.makeBlackMove(move, checkLegal=False)
@@ -119,11 +119,11 @@ class AIvAIGame(TwoPlayerChess):
 
 class HumanvAIGame(TwoPlayerChess):
 
-    def __init__(self, human, aiMoveType=None):
+    def __init__(self, human, aiMaxDepth=None):
         super().__init__()
         self.human = human
         self.ai = 10 if human == 20 else 20
-        self.aiMoveType = aiMoveType
+        self.aiMaxDepth = aiMaxDepth
         self.first = self.human if self.human == 10 else self.ai
 
     def getHumanMove(self):
@@ -141,7 +141,7 @@ class HumanvAIGame(TwoPlayerChess):
                 while not self.makeWhiteMove(self.getHumanMove(), checkLegal=True):
                     pass
             else:
-                move = self.white.getMove(moveType=self.aiMoveType)
+                move = self.white.getMove(maxDepth=self.aiMaxDepth)[0]
                 self.makeWhiteMove(move)
                 print('AI chose move:  ', move[0], '->', move[1])
 
@@ -150,7 +150,7 @@ class HumanvAIGame(TwoPlayerChess):
                 while not self.makeBlackMove(self.getHumanMove(), checkLegal=True):
                     pass
             else:
-                move = self.black.getMove(moveType=self.aiMoveType)
+                move = self.black.getMove(maxDepth=self.aiMaxDepth)[0]
                 self.makeBlackMove(move)
                 print('AI chose move:  ', move[0], '->', move[1])
 

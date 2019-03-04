@@ -27,11 +27,8 @@ class ChessGame:
         self.board.makeMoveForce(move)
         return True
 
-    def getMove(self, moveType=None):
-        if not moveType:
-            return self.moveEval.getMove()
-        else:
-            return self.moveEval.getMove(moveType=moveType)
+    def getMove(self, maxDepth=None):
+        return self.moveEval.getMove(maxDepth=maxDepth)
 
     def __str__(self):
         out = '\n'

@@ -2,25 +2,27 @@ from GameManager import AIvAIGame, HumanvAIGame
 from ChessGame import ChessGame
 
 
-init = '- K - - - - - - \
+init = '- - - - - k - - \
+        p p - - b r - - \
         - - - - - - - - \
+        - - - - - - - P \
+        - P - - - P P - \
         - - - - - - - - \
-        - - - - - - - - \
-        - - - - - - - - \
-        - - B - - - - - \
-        - r - R - - - - \
-        k - - - - - - -'
+        - - Q K - - - - \
+        - - - - - - - -'
 
-game = ChessGame(20, init)
+game = ChessGame(10, init)
+move = game.getMove(maxDepth=4)
+# print(game)
+# game.makeMove(move[0])
 print(game)
-move = game.getMove()
-print(move)
+# print(move)
 
-# game = AIvAIGame()
-# game.playUntilDone()
+# game = AIvAIGame(3, 2)
+# game.playUntilDone(printStuff=True)
 
-# game = AIvAIGame()
-# game.playNTimes(100)
+# game = AIvAIGame(3, 2)
+# game.playNTimes(10)
 
 # game = HumanvAIGame(10)
 # game.play()
