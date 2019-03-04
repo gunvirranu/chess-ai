@@ -4,7 +4,6 @@ import MoveEval
 class MinMax:
 
     # `MAX_DEPTH` MUST be minimum 2 to handle illegal moves
-
     DEFAULT_MAX_DEPTH = 3
 
     def __init__(self, moveEval, maxDepth):
@@ -22,7 +21,51 @@ class MinMax:
     def getMove(self):
         if self.moveGen.isCheckmate():
             return None, None
-        return self.minMaxRecursor(depth=0)
+        return self.negamax(depth=0, alpha=-9999999, beta=+9999999, color=1)
+
+    def negamax(self, depth, alpha, beta, color):
+
+        if depth == self.MAX_DEPTH:
+            return None, color * self.moveEval.boardHeuristic()
+
+        gen = self.moveGen if color == 1 else self.oppGen
+        moves = gen.getPlayerMoves(legal=False)
+        if not moves:
+            return None, None
+        self.movesEvaluated += len(moves)
+
+        bestScore = -99999999
+        bestMove = None
+        moveScores = []
+
+        for move in moves:
+
+            if self.board.boardArr[move[1]] % 10 == 5:
+                kingKillFlag = True
+            else:
+                kingKillFlag = False
+
+            self.board.makeMoveForce(move)
+            downMove, negaScore = self.negamax(depth + 1 if not kingKillFlag else self.MAX_DEPTH, -beta, -alpha, -color)
+            self.board.undoMove()
+            if negaScore is None:
+                continue
+
+            moveScores.append((move, -negaScore))
+
+            bestMove = bestMove if bestScore >= -negaScore else move
+            bestScore = max(bestScore, -negaScore)
+            alpha = max(alpha, bestScore)
+            if alpha > beta:
+                break
+
+        if not moveScores:
+            return None, None
+
+        if depth == 0:
+            print('# of moves evaluated:', self.movesEvaluated)
+
+        return bestMove, bestScore
 
     def minMaxRecursor(self, depth):
 
