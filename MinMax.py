@@ -4,7 +4,7 @@ import MoveEval
 class MinMax:
 
     # `MAX_DEPTH` MUST be minimum 2 to handle illegal moves
-    DEFAULT_MAX_DEPTH = 3
+    DEFAULT_MAX_DEPTH = 5
 
     def __init__(self, moveEval, maxDepth):
         self.moveEval = moveEval
