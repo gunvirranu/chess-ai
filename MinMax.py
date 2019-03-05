@@ -1,10 +1,11 @@
 import MoveEval
+import MoveGen
 
 
 class MinMax:
 
     # `MAX_DEPTH` MUST be minimum 2 to handle illegal moves
-    DEFAULT_MAX_DEPTH = 5
+    DEFAULT_MAX_DEPTH = 4
 
     def __init__(self, moveEval, maxDepth):
         self.moveEval = moveEval
@@ -15,14 +16,19 @@ class MinMax:
         self.movesEvaluated = 0
 
         self.opp = 20 if self.player == 10 else 10
-        self.oppGen = MoveEval.MoveGen(self.board, self.opp)
+        self.oppGen = MoveGen.MoveGen(self.board, self.opp)
         self.oppEval = MoveEval.MoveEval(self.oppGen, self.opp)
 
     def getMove(self):
         if self.moveGen.isCheckmate():
             return None, None
         currentHeuristic = self.moveEval.boardHeuristic()
-        return self.negamax(depth=0, alpha=-9999999, beta=+9999999, color=1, currentHeuristic=currentHeuristic)
+        move, score, candidateMoves = self.negamax(depth=0, alpha=-9999999, beta=+9999999, color=1, currentHeuristic=currentHeuristic)
+        # Ensure move is legal to prevent AI from killing self lmao
+        # TODO: Figure out a better way to do this
+        if move not in self.moveGen.getPlayerMoves(legal=True):
+            return MinMax(self.moveEval, self.MAX_DEPTH-1).getMove()
+        return move, score, candidateMoves
 
     def negamax(self, depth, alpha, beta, color, currentHeuristic):
 
@@ -33,7 +39,6 @@ class MinMax:
         moves = gen.getPlayerMoves(legal=False)
         if not moves:
             return None, None
-        self.movesEvaluated += len(moves)
 
         bestScore = -99999999
         bestMove = None
@@ -41,14 +46,15 @@ class MinMax:
 
         for move in moves:
 
-            newHeuristic = self.moveEval.smartBoardHeuristic(currentHeuristic, move)
+            # to prioritize moves now rather than later
+            newHeuristic = 0.90 * self.moveEval.smartBoardHeuristic(currentHeuristic, move)
 
             if self.board.boardArr[move[1]] % 10 == 5:
-                downMove, negaScore = None, -color * newHeuristic
+                negaScore = -color * newHeuristic
 
             else:
                 self.board.makeMoveForce(move)
-                downMove, negaScore = self.negamax(depth + 1, -beta, -alpha, -color, newHeuristic)
+                negaScore = self.negamax(depth + 1, -beta, -alpha, -color, newHeuristic)[1]
                 self.board.undoMove()
                 if negaScore is None:
                     continue
@@ -65,9 +71,12 @@ class MinMax:
             return None, None
 
         if depth == 0:
-            print('# of moves evaluated:', self.movesEvaluated)
+            # print('# of moves evaluated:', self.movesEvaluated)
+            pass
+        else:
+            moveScores = []
 
-        return bestMove, bestScore
+        return bestMove, bestScore, moveScores
 
     def minMaxRecursor(self, depth):
 

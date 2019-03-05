@@ -31,16 +31,21 @@ class Board:
             self.boardArr = Board.convertLetterToBoard(init)
         else:
             self.boardArr = init
-        self.moveHistory = []
+        self.moveHistory = [0]
+        # self.moveHistIndex = 0
 
     def makeMoveForce(self, move):
         move += (self.boardArr[move[1]],)
         self.boardArr[move[1]] = self.boardArr[move[0]]
         self.boardArr[move[0]] = 0
         self.moveHistory.append(move)
+        # self.moveHistory[self.moveHistIndex] = move
+        # self.moveHistIndex += 1
 
     def undoMove(self):
         lastMove = self.moveHistory.pop()
+        # self.moveHistIndex -= 1
+        # lastMove = self.moveHistory[self.moveHistIndex]
         self.boardArr[lastMove[0]] = self.boardArr[lastMove[1]]
         self.boardArr[lastMove[1]] = lastMove[-1]
         return lastMove[0:-1]

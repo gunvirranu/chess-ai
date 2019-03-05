@@ -206,10 +206,12 @@ class MoveGen:
         moves = []
 
         # TODO: Handle pawn promotion
-        if color == 10 and pos >= 48:
-            pass
-        elif color == 20 and pos < 16:
-            pass
+        if color == 10 and 48 <= pos < 64:
+            if 48 <= pos < 56:
+                moves.append((pos, pos + 8*upDown))
+        elif color == 20 and 0 <= pos < 16:
+            if 8 <= pos < 16:
+                moves.append((pos, pos + 8*upDown))
         # Move forward
         elif self.board.boardArr[pos + 8*upDown] == 0:
             moves.append((pos, pos + 8*upDown))
