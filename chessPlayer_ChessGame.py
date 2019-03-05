@@ -30,13 +30,3 @@ class ChessGame:
     def getMove(self, maxDepth=None):
         return self.moveEval.getMove(maxDepth=maxDepth)
 
-    def __str__(self):
-        out = '\n'
-        out += 'Gunvir\'s Sick-Ass Chess Game LMAO\n'
-        out += 'Player: ' + ('White\n' if self.player == 10 else 'Black\n')
-        out += '  ╔═════════════════╗\n'
-        for i, line in enumerate(self.board.getPrettyBoard()):
-            out += str(7-i) + ' ║ ' + line + ' ║\n'
-        out += '  ╚═════════════════╝\n'
-        out += '    0 1 2 3 4 5 6 7 \n'
-        return out
