@@ -1,4 +1,4 @@
-import MinMax
+import chessPlayer_MinMax
 
 
 class MoveEval:
@@ -69,7 +69,7 @@ class MoveEval:
         return currentHeuristic
 
     def getMove(self, maxDepth=None):
-        return MinMax.MinMax(self, maxDepth).getMove()
+        return chessPlayer_MinMax.MinMax(self, maxDepth).getMove()
 
     KING_EVAL_WHITE = [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0, 2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0, -1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0, -2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0, -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0, -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0, -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0, -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0]
 

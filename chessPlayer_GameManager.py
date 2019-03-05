@@ -1,4 +1,4 @@
-from ChessGame import ChessGame
+from chessPlayer_ChessGame import ChessGame
 
 
 class TwoPlayerChess:

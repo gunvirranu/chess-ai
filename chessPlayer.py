@@ -1,5 +1,5 @@
 # from GameManager import AIvAIGame, HumanvAIGame
-from ChessGame import ChessGame
+from chessPlayer_ChessGame import ChessGame
 
 
 def nebuBoardTranslator(nebuBoard):

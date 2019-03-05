@@ -1,6 +1,6 @@
-from Board import Board
-from MoveGen import MoveGen
-from MoveEval import MoveEval
+from chessPlayer_Board import Board
+from chessPlayer_MoveGen import MoveGen
+from chessPlayer_MoveEval import MoveEval
 
 
 class ChessGame:
