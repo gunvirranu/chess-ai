@@ -12,7 +12,7 @@ class MoveEval:
      King:    +5
     """
 
-    PIECE_VALUE = [1, 3, 3, 5, 9, 42069]  # lmao
+    PIECE_VALUE = [5, 15, 15, 25, 45, 42069]  # lmao
 
     def __init__(self, moveGen, player):
         self.player = player

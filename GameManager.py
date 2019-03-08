@@ -132,26 +132,36 @@ class HumanvAIGame(TwoPlayerChess):
         pos1 = 8 * int(row1) + int(col1)
         pos2 = 8 * int(row2) + int(col2)
         return pos1, pos2
+    
+    def makeHumanMove(self):
+        flag = False
+        while not flag:
+            try:
+                while not self.makeWhiteMove(self.getHumanMove(), checkLegal=True):
+                    pass
+                flag = True
+            except (ValueError, TypeError):
+                print()
+                pass
+
+    def makeAIMove(self):
+        move = self.black.getMove(maxDepth=self.aiMaxDepth)[0]
+        self.makeBlackMove(move)
+        print('AI chose move:  ', move[0], '->', move[1])
 
     def play(self):
         while self.kingStatus() == 3:
 
             print(self.white)
             if self.first == self.human:
-                while not self.makeWhiteMove(self.getHumanMove(), checkLegal=True):
-                    pass
+                self.makeHumanMove()
             else:
-                move = self.white.getMove(maxDepth=self.aiMaxDepth)[0]
-                self.makeWhiteMove(move)
-                print('AI chose move:  ', move[0], '->', move[1])
+                self.makeAIMove()
 
             print(self.black)
             if self.first == self.ai:
-                while not self.makeBlackMove(self.getHumanMove(), checkLegal=True):
-                    pass
+                self.makeHumanMove()
             else:
-                move = self.black.getMove(maxDepth=self.aiMaxDepth)[0]
-                self.makeBlackMove(move)
-                print('AI chose move:  ', move[0], '->', move[1])
+                self.makeAIMove()
 
         self.printGameStatus()

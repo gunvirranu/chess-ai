@@ -1,10 +1,11 @@
 import MoveEval
+import MoveGen
 
 
 class MinMax:
 
     # `MAX_DEPTH` MUST be minimum 2 to handle illegal moves
-    DEFAULT_MAX_DEPTH = 5
+    DEFAULT_MAX_DEPTH = 3
 
     def __init__(self, moveEval, maxDepth):
         self.moveEval = moveEval
@@ -15,7 +16,7 @@ class MinMax:
         self.movesEvaluated = 0
 
         self.opp = 20 if self.player == 10 else 10
-        self.oppGen = MoveEval.MoveGen(self.board, self.opp)
+        self.oppGen = MoveGen.MoveGen(self.board, self.opp)
         self.oppEval = MoveEval.MoveEval(self.oppGen, self.opp)
 
     def getMove(self):
