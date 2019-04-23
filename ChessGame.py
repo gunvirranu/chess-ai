@@ -32,7 +32,6 @@ class ChessGame:
 
     def __str__(self):
         out = '\n'
-        out += 'Gunvir\'s Sick-Ass Chess Game LMAO\n'
         out += 'Player: ' + ('White\n' if self.player == 10 else 'Black\n')
         out += '  ╔═════════════════╗\n'
         for i, line in enumerate(self.board.getPrettyBoard()):

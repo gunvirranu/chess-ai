@@ -1,28 +1,24 @@
 from GameManager import AIvAIGame, HumanvAIGame
-from ChessGame import ChessGame
 
 
-init = '- - - - - k - - \
-        p p - - b r - - \
-        - - - - - - - - \
-        - - - - - - - P \
-        - P - - - P P - \
-        - - - - - - - - \
-        - - Q K - - - - \
-        - - - - - - - -'
+# Can pass an (optional) initial board configuration to GameManager
+# init = '- - - - - k - - \
+#         p p - - b r - - \
+#         - - - - - - - - \
+#         - - - - - - - P \
+#         - P - - - P P - \
+#         - - - - - - - - \
+#         - - Q K - - - - \
+#         - - - - - - - -'
 
-game = ChessGame(10, init)
-move = game.getMove(maxDepth=4)
-# print(game)
-# game.makeMove(move[0])
-print(game)
-# print(move)
-
-# game = AIvAIGame(3, 2)
+# Arguments are `difficult` (actually max-depth of game tree lookahead)
+# game = AIvAIGame(4, 5)
 # game.playUntilDone(printStuff=True)
 
 # game = AIvAIGame(3, 2)
-# game.playNTimes(10)
+# game.playNTimes(10)     # Warning, this can take a very long time
 
-# game = HumanvAIGame(10)
-# game.play()
+# 10 : white, 20 : black
+game = HumanvAIGame(10, aiMaxDepth=4)
+game.play()
+
